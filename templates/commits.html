@@ -10,7 +10,6 @@
     <div id="daily_chart_div" style="width: 800px; height: 500px; margin-top: 20px;"></div>
     <div id="total_commits" style="margin-top: 20px;"></div>
     <script>
-        // Charger la bibliothèque de graphiques Google
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawCharts);
 
@@ -18,8 +17,8 @@
             fetch('https://api.github.com/repos/kevinziolko/5MCSI_Metriques/commits')
                 .then(response => response.json())
                 .then(data => {
-                    const commitCounts = {};
-                    const hourlyCommits = new Array(5).fill(0); // Préparer un tableau pour les heures de 8 à 12 inclus
+                    const commitData = [];
+                    const hourlyCommits = new Array(5).fill(0);
                     let totalCommits = 0;
 
                     data.forEach(commit => {
@@ -27,21 +26,23 @@
                         const dateKey = commitDate.toISOString().split('T')[0];
                         const hour = commitDate.getHours();
 
-                        if (!commitCounts[dateKey]) {
-                            commitCounts[dateKey] = 0;
+                        // Accumuler les commits par jour
+                        const found = commitData.find(cd => cd[0].toISOString().split('T')[0] === dateKey);
+                        if (found) {
+                            found[1]++;
+                        } else {
+                            commitData.push([commitDate, 1]);
                         }
-                        commitCounts[dateKey]++;
 
-                        // Pour le graphique du 12/02/2024 de 8h à 13h
+                        // Pour les commits du 12/02/2024 de 8h à 13h
                         if (dateKey === '2024-02-12' && hour >= 8 && hour < 13) {
-                            hourlyCommits[hour - 8]++; // Incrémente le compteur de commits pour l'heure correspondante
+                            hourlyCommits[hour - 8]++;
                         }
 
                         totalCommits++;
                     });
 
-                    const commitData = Object.keys(commitCounts).map(date => [new Date(date), commitCounts[date]]);
-                    drawEvolutionChart(commitData);
+                    drawEvolutionChart(commitData.sort((a, b) => a[0] - b[0])); // Trier les données par date
                     drawDailyChart(hourlyCommits);
                     document.getElementById('total_commits').innerText = "Nombre total de commits effectués : " + totalCommits;
                 })
@@ -49,18 +50,26 @@
         }
 
         function drawEvolutionChart(commitData) {
-            // Configuration pour le premier graphique (identique à l'exemple précédent)
-            // ...
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('date', 'Date');
+            dataTable.addColumn('number', 'Commits');
+            dataTable.addRows(commitData.map(cd => [cd[0], cd[1]]));
+
+            const options = {
+                title: 'Évolution des Commits dans le Temps',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                hAxis: {title: 'Date', format: 'M/d/yy'},
+                vAxis: {title: 'Nombre de commits'},
+                colors: ['#a52714'],
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(dataTable, options);
         }
 
         function drawDailyChart(hourlyCommits) {
-            // Convertir les données pour Google Charts
             const dailyCommitsData = hourlyCommits.map((count, index) => [8 + index, count]);
-            if (dailyCommitsData.length === 0) {
-                document.getElementById('daily_chart_div').innerText = "Pas de commits à afficher pour cette période.";
-                return;
-            }
-
             const dataTable = new google.visualization.DataTable();
             dataTable.addColumn('number', 'Heure');
             dataTable.addColumn('number', 'Commits');
@@ -70,13 +79,13 @@
                 title: 'Zoom sur les Commits sur la journée du 12/02/2024',
                 hAxis: {
                     title: 'Heure',
-                    ticks: [8, 9, 10, 11, 12], // Définir explicitement les marques d'heure pour la clarté
+                    ticks: [8, 9, 10, 11, 12],
                 },
                 vAxis: {
                     title: 'Nombre de commits',
                     minValue: 0,
-                    maxValue: 15, // Limite supérieure pour l'affichage des valeurs
-                    format: '0' // Forcer le formatage en nombres entiers
+                    maxValue: 15,
+                    format: '0'
                 },
                 legend: 'none',
                 colors: ['#4285F4'],
