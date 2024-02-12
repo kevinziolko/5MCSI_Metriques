@@ -8,7 +8,6 @@
 <body>
     <div id="chart_div" style="width: 800px; height: 500px;"></div>
     <div id="daily_chart_div" style="width: 800px; height: 500px; margin-top: 20px;"></div>
-    <div id="total_commits" style="margin-top: 20px;"></div>
     <script>
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawCharts);
@@ -19,7 +18,6 @@
                 .then(data => {
                     const commitData = [];
                     const hourlyCommits = new Array(5).fill(0);
-                    let totalCommits = 0;
 
                     data.forEach(commit => {
                         const commitDate = new Date(commit.commit.author.date);
@@ -38,17 +36,12 @@
                         if (dateKey === '2024-02-12' && hour >= 8 && hour < 13) {
                             hourlyCommits[hour - 8]++;
                         }
-
-                        totalCommits++;
                     });
 
                     drawEvolutionChart(commitData.sort((a, b) => a[0] - b[0])); // Trier les données par date
                     drawDailyChart(hourlyCommits);
-                    document.getElementById('total_commits').innerText = "Nombre total de commits effectués : " + data.length;
-
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
-            
         }
 
         function drawEvolutionChart(commitData) {
