@@ -44,7 +44,7 @@
 
                     drawEvolutionChart(commitData.sort((a, b) => a[0] - b[0])); // Trier les données par date
                     drawDailyChart(hourlyCommits);
-                    document.getElementById('total_commits').innerText = "Nombre total de commits effectués : " + totalCommits;
+                    document.getElementById('total_commits').innerText = "Nombre total de commits effectués : " + data.length;
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
