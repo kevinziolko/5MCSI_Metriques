@@ -19,6 +19,7 @@
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         width: 300px;
+        box-sizing: border-box;
     }
     h2 {
         text-align: center;
@@ -28,7 +29,7 @@
         font-weight: bold;
         color: #333333;
     }
-    input[type="text"], textarea {
+    input[type="text"], textarea, button {
         width: 100%;
         padding: 8px;
         margin: 10px 0;
@@ -39,20 +40,9 @@
     textarea {
         resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
     }
-</style>
-</head>
-<body>
-
-<h2>Formulaire de Contact</h2>
-
-<form>
-    <label for="prenom">Prénom:</label><br>
-    <input type="text" id="prenom" name="prenom"><br>
-    <label for="nom">Nom:</label><br>
-    <input type="text" id="nom" name="nom"><br>
-    <label for="message">Votre message:</label><br>
-    <textarea id="message" name="message" rows="4"></textarea><br>
-</form>
-
-</body>
-</html>
+    button {
+        background-color: #4CAF50; /* Couleur de fond du bouton */
+        color: white; /* Couleur du texte du bouton */
+        border: none; /* Pas de bordure pour le bouton */
+        cursor: pointer; /* Change le curseur en un pointeur */
+        padding: 10px; /* Plus de padding pour le
