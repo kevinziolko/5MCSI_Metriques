@@ -1,7 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Formulaire Simple</title>
+<meta charset="UTF-8">
+<title>Formulaire Design</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    form {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+    h2 {
+        text-align: center;
+        color: #333333;
+    }
+    label {
+        font-weight: bold;
+        color: #333333;
+    }
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border-radius: 4px;
+        border: 1px solid #cccccc;
+        box-sizing: border-box; /* Pour que la largeur inclue padding + bordure */
+    }
+    textarea {
+        resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
+    }
+</style>
 </head>
 <body>
 
@@ -13,7 +51,7 @@
     <label for="nom">Nom:</label><br>
     <input type="text" id="nom" name="nom"><br>
     <label for="message">Votre message:</label><br>
-    <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
+    <textarea id="message" name="message" rows="4"></textarea><br>
 </form>
 
 </body>
